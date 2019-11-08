@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  rails:
+    build: &rails_build
+      context: .
+    volumes: &rails_volumes
+      - $PWD:/app
+    env_file: &env
+      - .env
+    ports:
+     - "3000:3000"
+  webpacker:
+    build: *rails_build
+    volumes: *rails_volumes
+    env_file: *env
+    command: ./bin/webpack-dev-server
+    ports:
+      - '3035:3035'
+    environment:
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+      - LANG=C.UTF-8
+      - RAILS_LOG_TO_STDOUT=true
