@@ -4,9 +4,11 @@ services:
     build: &rails_build
       context: .
     volumes: &rails_volumes
-      - $PWD:/app
+      - .:/app
     env_file: &env
       - .env
+    environment:
+      - DATABASE_URL=postgres://postgres:password@postgres:5432/rails_dev
     ports:
      - "3000:3000"
   webpacker:
@@ -18,5 +20,11 @@ services:
       - '3035:3035'
     environment:
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
-      - LANG=C.UTF-8
-      - RAILS_LOG_TO_STDOUT=true
+  postgres:
+    image: "postgres:10.3-alpine"
+    ports: ["5432:5432"]
+    volumes:
+      - $HOME/docker_data/rails_new:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=rails_dev
+      - POSTGRES_PASSWORD=password
